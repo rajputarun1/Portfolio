@@ -1,0 +1,146 @@
+@import "tailwindcss";
+
+@theme {
+  --color-neon-green: #0f0;
+  --color-neon-blue: #0ff;
+  --color-dark-bg: #050505;
+  --color-dark-card: #111111;
+  --color-dark-surface: #1a1a1a;
+
+  --font-mono: "Fira Code", "JetBrains Mono", monospace;
+  --font-sans: Inter, sans-serif;
+
+  --animate-glitch: glitch 2.5s infinite;
+  --animate-matrix-fall: matrix 10s linear infinite;
+
+  @keyframes glitch {
+    0% { transform: translate(0); }
+    20% { transform: translate(-2px, 2px); }
+    40% { transform: translate(-2px, -2px); }
+    60% { transform: translate(2px, 2px); }
+    80% { transform: translate(2px, -2px); }
+    100% { transform: translate(0); }
+  }
+
+  @keyframes matrix {
+    0% { background-position: 0% -100%; }
+    100% { background-position: 0% 100%; }
+  }
+}
+
+@layer base {
+  body {
+    @apply bg-dark-bg text-gray-300 font-sans overflow-x-hidden cursor-none;
+  }
+  
+  ::selection {
+    @apply bg-neon-green/30 text-neon-green;
+  }
+}
+
+@layer components {
+  .glitch-text {
+    position: relative;
+    /* Glitch effect implemented via GSAP in component */
+  }
+
+  .glass-card {
+    @apply bg-dark-card/60 backdrop-blur-md border border-neon-green/20 rounded-xl relative overflow-hidden;
+    box-shadow: 0 4px 30px rgba(0, 255, 0, 0.05);
+  }
+
+  .glass-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(0, 255, 0, 0.3), transparent);
+  }
+
+  .glass-card:hover {
+    @apply border-neon-green/50;
+    box-shadow: 0 4px 30px rgba(0, 255, 0, 0.15), 0 0 15px rgba(0, 255, 0, 0.2);
+  }
+
+  .glass-card-blue {
+    @apply bg-dark-card/60 backdrop-blur-md border border-neon-blue/20 rounded-xl relative overflow-hidden;
+    box-shadow: 0 4px 30px rgba(0, 255, 255, 0.05);
+  }
+
+  .glass-card-blue::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.3), transparent);
+  }
+
+  .glass-card-blue:hover {
+    @apply border-neon-blue/50;
+    box-shadow: 0 4px 30px rgba(0, 255, 255, 0.15), 0 0 15px rgba(0, 255, 255, 0.2);
+  }
+
+  /* Cyber Buttons */
+  .btn-cyber {
+    @apply relative inline-flex items-center justify-center px-8 py-3 overflow-hidden font-mono font-bold text-neon-green bg-transparent border-2 border-neon-green rounded-sm transition-all duration-300;
+    text-shadow: 0 0 5px rgba(0, 255, 0, 0.5);
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.2), inset 0 0 10px rgba(0, 255, 0, 0.1);
+  }
+
+  .btn-cyber::before {
+    content: '';
+    @apply absolute top-0 left-[-100%] w-full h-full bg-neon-green/20 transition-all duration-300;
+    transform: skewX(-45deg);
+  }
+
+  .btn-cyber:hover::before {
+    @apply left-[100%];
+  }
+
+  .btn-cyber:hover {
+    @apply bg-neon-green/10 text-neon-green;
+    box-shadow: 0 0 20px rgba(0, 255, 0, 0.4), inset 0 0 15px rgba(0, 255, 0, 0.2);
+  }
+
+  .btn-cyber-blue {
+    @apply relative inline-flex items-center justify-center px-8 py-3 overflow-hidden font-mono font-bold text-neon-blue bg-transparent border-2 border-neon-blue rounded-sm transition-all duration-300;
+    text-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.2), inset 0 0 10px rgba(0, 255, 255, 0.1);
+  }
+
+  .btn-cyber-blue:hover {
+    @apply bg-neon-blue/10;
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.4), inset 0 0 15px rgba(0, 255, 255, 0.2);
+  }
+
+  .section-heading {
+    @apply text-3xl md:text-5xl font-mono font-bold mb-12 relative inline-block text-white;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+  }
+  
+  .section-heading::after {
+    content: '_';
+    @apply animate-pulse text-neon-green absolute -right-6 top-0;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-dark-bg;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-dark-surface border border-neon-green/30 rounded;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-neon-green/50;
+}
