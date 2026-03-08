@@ -3,14 +3,21 @@ import React, { useEffect, useState } from 'react';
 const Cursor = () => {
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isHovering, setIsHovering] = useState(false);
+  const [isTouch, setIsTouch] = useState(false);
 
   useEffect(() => {
+    // Detect touch device — don't show custom cursor on mobile/tablet
+    const hasTouchScreen = window.matchMedia('(pointer: coarse)').matches;
+    if (hasTouchScreen) {
+      setIsTouch(true);
+      return;
+    }
+
     const updatePosition = (e) => {
       setPosition({ x: e.clientX, y: e.clientY });
     };
 
     const handleMouseOver = (e) => {
-      // Check if hovering over interactive elements
       if (
         e.target.tagName.toLowerCase() === 'a' ||
         e.target.tagName.toLowerCase() === 'button' ||
@@ -33,6 +40,9 @@ const Cursor = () => {
     };
   }, []);
 
+  // Don't render anything on touch/mobile devices
+  if (isTouch) return null;
+
   return (
     <>
       <div 
@@ -52,3 +62,4 @@ const Cursor = () => {
 };
 
 export default Cursor;
+

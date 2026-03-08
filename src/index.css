@@ -32,6 +32,31 @@
   body {
     @apply bg-dark-bg text-gray-300 font-sans overflow-x-hidden cursor-none;
   }
+
+  /* Restore native cursor on touch/mobile devices */
+  @media (pointer: coarse) {
+    body {
+      cursor: auto;
+    }
+    a, button {
+      cursor: pointer;
+    }
+    /* Ensure touch targets are large enough (min 44px) */
+    a, button {
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+    }
+  }
+
+  /* Reduce animations for users who prefer it */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
   
   ::selection {
     @apply bg-neon-green/30 text-neon-green;
