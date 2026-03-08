@@ -1,41 +1,38 @@
 import React, { useState } from 'react';
+import { useForm, ValidationError } from '@formspree/react';
+
+// ⚠️ REPLACE 'YOUR_FORM_ID' with your actual Formspree form ID
+// Get it from: https://formspree.io → New Form → Copy the ID from the endpoint URL
+const FORMSPREE_ID = 'myknzozp';
 
 const Contact = () => {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    message: ''
-  });
+  const [state, handleFormspreeSubmit] = useForm(FORMSPREE_ID);
   const [terminalOutput, setTerminalOutput] = useState([
     "user@system:~$ ./initiate_contact.sh",
     "Initializing secure connection... [OK]",
     "Awaiting user input..."
   ]);
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
-
   const handleFocus = (field) => {
     setTerminalOutput(prev => [...prev, `user@system:~$ Edit field: ${field}`]);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setTerminalOutput(prev => [
-      ...prev, 
+      ...prev,
       "user@system:~$ ./send_payload.sh",
       "Encrypting message instance... [OK]",
       "Establishing secure tunnel... [OK]",
-      "Payload transmitted successfully.",
-      "Connection terminated."
     ]);
-    
-    // Reset form after submission
-    setTimeout(() => {
-      setFormData({ name: '', email: '', message: '' });
-    }, 2000);
+    await handleFormspreeSubmit(e);
+    if (state.succeeded) {
+      setTerminalOutput(prev => [
+        ...prev,
+        "Payload transmitted successfully. ✓",
+        "Connection terminated."
+      ]);
+    }
   };
 
   return (
@@ -117,14 +114,19 @@ const Contact = () => {
                 <span className="animate-pulse">_</span>
               </div>
 
+              {state.succeeded ? (
+                <div className="flex-1 flex flex-col items-center justify-center gap-4 py-8">
+                  <div className="text-neon-green text-5xl">✓</div>
+                  <p className="text-neon-green font-mono text-lg">Transmission received!</p>
+                  <p className="text-gray-400 font-mono text-sm">I'll get back to you soon.</p>
+                </div>
+              ) : (
               <form onSubmit={handleSubmit} className="flex flex-col gap-4 mt-auto">
                 <div className="flex items-center">
                   <span className="text-neon-green mr-2 w-24">$_ NAME:</span>
                   <input 
                     type="text" 
                     name="name" 
-                    value={formData.name} 
-                    onChange={handleInputChange}
                     onFocus={() => handleFocus('NAME')}
                     required
                     className="flex-1 bg-transparent border-b border-gray-700 text-white focus:border-neon-green focus:outline-none py-1 interactive" 
@@ -137,35 +139,34 @@ const Contact = () => {
                   <input 
                     type="email" 
                     name="email" 
-                    value={formData.email} 
-                    onChange={handleInputChange}
                     onFocus={() => handleFocus('EMAIL')}
                     required
                     className="flex-1 bg-transparent border-b border-gray-700 text-white focus:border-neon-green focus:outline-none py-1 interactive" 
                     placeholder="Enter return address payload" 
                   />
+                  <ValidationError prefix="Email" field="email" errors={state.errors} className="text-red-400 text-xs mt-1" />
                 </div>
 
                 <div className="flex items-start">
                   <span className="text-neon-green mr-2 w-24 pt-1">$_ MESSAGE:</span>
                   <textarea 
                     name="message" 
-                    value={formData.message} 
-                    onChange={handleInputChange}
                     onFocus={() => handleFocus('MESSAGE')}
                     required
                     rows="4"
                     className="flex-1 bg-transparent border border-gray-700 text-white focus:border-neon-green focus:outline-none py-2 px-3 interactive resize-none" 
                     placeholder="Input transmission data here..." 
                   />
+                  <ValidationError prefix="Message" field="message" errors={state.errors} className="text-red-400 text-xs mt-1" />
                 </div>
 
                 <div className="mt-4 self-end">
-                  <button type="submit" className="btn-cyber interactive">
-                    [EXECUTE_TRANSMISSION]
+                  <button type="submit" disabled={state.submitting} className="btn-cyber interactive disabled:opacity-50">
+                    {state.submitting ? '[TRANSMITTING...]' : '[EXECUTE_TRANSMISSION]'}
                   </button>
                 </div>
               </form>
+              )}
             </div>
           </div>
         </div>
