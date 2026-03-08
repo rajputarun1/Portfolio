@@ -134,7 +134,7 @@ npm run build
 | 📧 Email   | [rajputarunpratapsingh@gmail.com](mailto:rajputarunpratapsingh@gmail.com) |
 | 💼 LinkedIn | [linkedin.com/in/rajputarun01](https://www.linkedin.com/in/rajputarun01) |
 | 🐙 GitHub  | [github.com/rajputarun1](https://github.com/rajputarun1) |
-| 📱 Phone   | +91-7828700582 |
+
 
 ---
 
